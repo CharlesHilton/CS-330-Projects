@@ -182,7 +182,7 @@ public:
 	{
 		glColor3f(color.r, color.g, color.b);
 		glBegin(GL_POLYGON);
-		for (float i = 0; i < 360; i++) {
+		for (float i = 0.0f; i < 360.0f; i++) {
 			float angle = glm::radians(i);
 		
 			glVertex2f((cos(angle) * radius) + location.x, (sin(angle) * radius) + location.y);
@@ -231,10 +231,9 @@ int main(void) {
 		processInput(window);
 		glClearColor(0.0, 0.0, 0.0, 1.0);
 		//Movement
-		for (auto itC = circles.begin(); itC != circles.end(); itC++) {
+		for (auto itC = circles.begin(); itC != circles.end(); ) {
 			// Check for collisions with bricks.
 			for (auto itB = bricks.begin(); itB != bricks.end(); itB++) {
-				
 				itC->CheckCollision(&*itB);
 			}
 			// Check for collision with other circles (oc).
@@ -250,19 +249,20 @@ int main(void) {
 			itC->Move();
 			itC->Draw();
 
-			if (collisionOccured) {
-				if (itC->radius < 0.01) {
+			if (collisionOccured && itC->radius < 0.01) {
 					itC = circles.erase(itC);
-				}
+			}
+			else
+			{
+				itC++;
 			}
 		}
 
-		// Remove destroyed bricks.
 		for (auto itB = bricks.begin(); itB != bricks.end(); ) {
-			if (itB->drawState == OFF) {
+			if (itB->drawState == OFF) {		// Remove destroyed bricks.
 				itB = bricks.erase(itB);
 			}
-			else {
+			else {								// Draw the brick.
 				itB->Draw();
 				itB++;
 			}
