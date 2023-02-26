@@ -6,6 +6,7 @@
 #include <conio.h>
 #include <iostream>
 #include <vector>
+#include <list>
 #include <windows.h>
 #include <time.h>
 #include <glm/glm.hpp>
@@ -191,8 +192,8 @@ public:
 };
 
 
-vector<Circle> circles;
-vector<Brick> bricks;
+list<Circle> circles;
+list<Brick> bricks;
 
 
 int main(void) {
@@ -230,35 +231,47 @@ int main(void) {
 		processInput(window);
 		glClearColor(0.0, 0.0, 0.0, 1.0);
 		//Movement
-		for (size_t c = 0; c < circles.size(); c++) {
+		for (auto itC = circles.begin(); itC != circles.end(); itC++) {
 			// Check for collisions with bricks.
-			for (size_t b = 0; b < bricks.size(); b++) {
-				circles[c].CheckCollision(&bricks[b]);
+			for (auto itB = bricks.begin(); itB != bricks.end(); itB++) {
+				
+				itC->CheckCollision(&*itB);
 			}
 			// Check for collision with other circles (oc).
 			bool collisionOccured = false;
-			for (size_t oc = 0; oc < circles.size(); oc++) {
-				if (c != oc) {
-					if (circles[c].CheckCollision(&circles[oc])) {
+			for (auto itOc = circles.begin(); itOc != circles.end(); ) {
+				if (itC != itOc) {
+					if (itC->CheckCollision(&*itOc)) {
 						collisionOccured = true;
 					}
 				}
+				itOc++;
 			}
-			circles[c].Move();
-			circles[c].Draw();
+			itC->Move();
+			itC->Draw();
+
+			if (collisionOccured) {
+				if (itC->radius < 0.01) {
+					itC = circles.erase(itC);
+				}
+			}
 		}
 
 		// Remove destroyed bricks.
-		for (size_t b = bricks.size()-1; b > -1; b--) {
-			if (bricks[b].drawState == OFF) {
-				bricks.erase(bricks.begin() + b);
+		for (auto itB = bricks.begin(); itB != bricks.end(); ) {
+			if (itB->drawState == OFF) {
+				itB = bricks.erase(itB);
+			}
+			else {
+				itB->Draw();
+				itB++;
 			}
 		}
 
 		// Draw bricks.
-		for (size_t b = 0; b < bricks.size(); b++) {
-			bricks[b].Draw();
-		}
+		//for (size_t b = 0; b < bricks.size(); b++) {
+		//	bricks[b].Draw();
+		//}
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
