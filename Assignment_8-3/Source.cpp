@@ -192,11 +192,16 @@ public:
 
 	void Draw()
 	{
+		int nSides = 20;
+		float angleIncrement = 360.0 / nSides;
 		glColor3f(color.r, color.g, color.b);
 		glBegin(GL_POLYGON);
-		int nSides = 30;
-		for (float i = 0.0f; i < 360.0f; i++) {
-			float angle = glm::radians(i);
+		glVertex2f(location.x, location.y);
+
+		glColor3f(0.0f, 0.0f, 0.0f);
+		for (int i = 0; i <= nSides; i++) {
+			float angle = glm::radians(i * angleIncrement);
+
 			glVertex2f((cos(angle) * radius) + location.x, (sin(angle) * radius) + location.y);
 		}
 		glEnd();
