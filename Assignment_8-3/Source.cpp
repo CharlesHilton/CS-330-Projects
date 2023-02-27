@@ -50,8 +50,13 @@ glm::vec2 RandomDirectionVector() {
 	return glm::normalize(glm::vec2(cos(angle), sin(angle)));
 }
 
+void glColor3f(glm::vec3 color = RandomColor()) {
+	glColor3f(color.r, color.g, color.b);
+}
+
 enum BRICKTYPE { REFLECTIVE, DESTRUCTABLE };
 enum ONOFF { ON, OFF };
+
 
 class Brick
 {
@@ -189,9 +194,9 @@ public:
 	{
 		glColor3f(color.r, color.g, color.b);
 		glBegin(GL_POLYGON);
+		int nSides = 30;
 		for (float i = 0.0f; i < 360.0f; i++) {
 			float angle = glm::radians(i);
-		
 			glVertex2f((cos(angle) * radius) + location.x, (sin(angle) * radius) + location.y);
 		}
 		glEnd();
