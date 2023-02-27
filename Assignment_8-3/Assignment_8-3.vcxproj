@@ -83,8 +83,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\Users\charl\OneDrive - SNHU\CS-330\Visual Studio\OpenGL\GLEW\include;C:\Users\charl\OneDrive - SNHU\CS-330\Visual Studio\OpenGL\GLFW\include;C:\Users\charl\OneDrive - SNHU\CS-330\Visual Studio\OpenGL\GLAD;C:\Users\charl\OneDrive - SNHU\CS-330\OpenGL\glm;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\charl\OneDrive - SNHU\CS-330\OpenGL\GLFW\lib-vc2019;C:\Users\charl\OneDrive - SNHU\CS-330\OpenGL\GLEW\lib\Release\Win32;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\..\OpenGL\GLEW\include;..\..\OpenGL\GLFW\include;..\..\OpenGL\GLAD;..\..\OpenGL\glm;$(IncludePath)</IncludePath>
+    <LibraryPath>..\..\OpenGL\GLFW\lib-vc2019;..\..\OpenGL\GLEW\lib\Release\Win32;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

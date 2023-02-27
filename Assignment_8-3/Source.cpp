@@ -80,7 +80,7 @@ public:
 
 		this->drawState = ON;
 
-		float halfside = width / 2;
+		float halfside = this->width / 2;
 		this->top = location.y + halfside;
 		this->bottom = location.y - halfside;
 		this->right = location.x + halfside;
@@ -202,10 +202,9 @@ public:
 		glBegin(GL_POLYGON);
 		glVertex2f(location.x, location.y);
 
-		glColor3f(0.0f, 0.0f, 0.0f);
+		glColor3f();
 		for (unsigned int i = 0; i <= nSides; i++) {
 			float angle = glm::radians(i * angleIncrement);
-
 			glVertex2f((cos(angle) * radius) + location.x, (sin(angle) * radius) + location.y);
 		}
 		glEnd();
@@ -232,7 +231,7 @@ int main(void) {
 	glfwSwapInterval(1);
 
 
-	for (unsigned int i = 0; i < 10; i++) {	// Generate bricks.
+	for (unsigned int i = 0; i < 20; i++) {	// Generate bricks.
 		glm::vec2 location = RandomLocation();
 		BRICKTYPE bt;
 		switch (rand() % 2)
