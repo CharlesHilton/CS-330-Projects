@@ -19,6 +19,7 @@ using namespace std;
 
 void processInput(GLFWwindow* window);
 
+
 const float pi = glm::pi<float>();
 
 std::chrono::time_point<std::chrono::steady_clock> lastKeyPressedTime[];
@@ -108,23 +109,23 @@ public:
 class Circle
 {
 public:
-	//float red, green, blue;
-	glm::vec3 color;
-	float radius;
 	float speed = 0.01f;
-	glm::vec2 location;
-	glm::vec2 directionVector;
 	float restitution = 0.9f;	// percent speed modification after collision with another object.
 
-	Circle(glm::vec2 loc, glm::vec2 drcVec, float rad, glm::vec3 colr) {
-		location = loc;
-		directionVector = drcVec;
-		radius = rad;
-		color = colr;
+	float radius;
+	glm::vec2 location;
+	glm::vec2 directionVector;
+	glm::vec3 color;
+
+	Circle(glm::vec2 location, glm::vec2 directionVector, float radius, glm::vec3 color) {
+		this->location = location;
+		this->directionVector = directionVector;
+		this->radius = radius;
+		this->color = color;
 	}
 
 	float Area() { 
-		return pi * pow(radius, 2);
+		return pi * pow<float>(radius, 2);
 	}
 
 	void CheckCollision(Brick* brk)
@@ -171,35 +172,35 @@ public:
 
 	void Move() {
 		// Flip direction vector for appropriate component when reaching the edge of the frame.
-		if (this->location.x < -1.0) {
-			directionVector.x = abs(directionVector.x);
+		if (this->location.x < -1.0f) {
+			this->directionVector.x = abs(this->directionVector.x);
 		}
 		
-		if (this->location.x > 1.0) {
-			directionVector.x = -abs(directionVector.x);
+		if (this->location.x > 1.0f) {
+			this->directionVector.x = -abs(this->directionVector.x);
 		}
 
-		if (this->location.y < -1.0) {
-			directionVector.y = abs(directionVector.y);
+		if (this->location.y < -1.0f) {
+			this->directionVector.y = abs(this->directionVector.y);
 		}
 
-		if (this->location.y > 1.0) {
-			directionVector.y = -abs(directionVector.y);
+		if (this->location.y > 1.0f) {
+			this->directionVector.y = -abs(this->directionVector.y);
 		}
 
-		location += (speed * directionVector); // Update location.
+		this->location += (this->speed * this->directionVector); // Update location.
 	}
 
 	void Draw()
 	{
-		int nSides = 20;
-		float angleIncrement = 360.0 / nSides;
+		unsigned int nSides = 20;
+		float angleIncrement = 360.0f / nSides;
 		glColor3f(color.r, color.g, color.b);
 		glBegin(GL_POLYGON);
 		glVertex2f(location.x, location.y);
 
 		glColor3f(0.0f, 0.0f, 0.0f);
-		for (int i = 0; i <= nSides; i++) {
+		for (unsigned int i = 0; i <= nSides; i++) {
 			float angle = glm::radians(i * angleIncrement);
 
 			glVertex2f((cos(angle) * radius) + location.x, (sin(angle) * radius) + location.y);
@@ -228,11 +229,11 @@ int main(void) {
 	glfwSwapInterval(1);
 
 
-	bricks.push_back(Brick(REFLECTIVE, glm::vec2(0.5, -0.33), 0.2, RandomColor()));
-	bricks.push_back(Brick(REFLECTIVE, glm::vec2(0.5, -0.33), 0.2, RandomColor()));
-	bricks.push_back(Brick(DESTRUCTABLE, glm::vec2(-0.5, 0.33), 0.2, RandomColor()));
-	bricks.push_back(Brick(DESTRUCTABLE, glm::vec2(-0.5, -0.33), 0.2, RandomColor()));
-	bricks.push_back(Brick(REFLECTIVE, glm::vec2(0, 0), 0.2, RandomColor()));
+	bricks.push_back(Brick(REFLECTIVE, glm::vec2(0.5f, -0.33f), 0.2f, RandomColor()));
+	bricks.push_back(Brick(REFLECTIVE, glm::vec2(0.5f, -0.33f), 0.2f, RandomColor()));
+	bricks.push_back(Brick(DESTRUCTABLE, glm::vec2(-0.5f, 0.33f), 0.2f, RandomColor()));
+	bricks.push_back(Brick(DESTRUCTABLE, glm::vec2(-0.5f, -0.33f), 0.2f, RandomColor()));
+	bricks.push_back(Brick(REFLECTIVE, glm::vec2(0.0f, 0.0f), 0.2f, RandomColor()));
 
 	while (!glfwWindowShouldClose(window)) {
 		//Setup View
@@ -283,11 +284,6 @@ int main(void) {
 			}
 		}
 
-		// Draw bricks.
-		//for (size_t b = 0; b < bricks.size(); b++) {
-		//	bricks[b].Draw();
-		//}
-
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
@@ -306,10 +302,10 @@ void processInput(GLFWwindow* window)
 
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
 	{
-	/*	auto now = std::chrono::steady_clock::now();
-		std::chrono::milliseconds deltaTime(100);
-		if ((now - lastKeyPressedTime[GLFW_KEY_SPACE]) > deltaTime) {*/
-			glm::vec2 baseLoc = glm::vec2(Random<float>(-1.0, 1.0), Random<float>(-1.0, 1.0));
+		//auto now = std::chrono::steady_clock::now();
+		//std::chrono::milliseconds deltaTime(100);
+		//if ((now - lastKeyPressedTime[GLFW_KEY_SPACE]) > deltaTime) {
+			glm::vec2 baseLoc = glm::vec2(Random<float>(-1.0f, 1.0f), Random<float>(-1.0f, 1.0f));
 			float baseRad = 0.05f;
 			Circle cir(baseLoc, RandomDirectionVector(), baseRad, RandomColor());
 			circles.push_back(cir);
@@ -317,3 +313,10 @@ void processInput(GLFWwindow* window)
 		//}
 	}
 }
+
+//template <typename T>
+//void Spawn(list<T>& objectList) {
+//
+//	objectList.push_back();
+//}
+
