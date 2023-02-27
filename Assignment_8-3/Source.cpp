@@ -1,3 +1,4 @@
+#include <chrono>
 #include <GL/glew.h>
 #include <GLFW\glfw3.h>
 #include "linmath.h"
@@ -14,13 +15,13 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <random>
 
-#include "Polygon.h"
-
 using namespace std;
 
 void processInput(GLFWwindow* window);
 
 const float pi = glm::pi<float>();
+
+std::chrono::time_point<std::chrono::steady_clock> lastKeyPressedTime[];
 
 template<typename T>
 bool in_range(T number, T min_value, T max_value) {
@@ -69,13 +70,19 @@ public:
 		this->color = color;
 
 		this->drawState = ON;
+
+		float halfside = width / 2;
+		this->top = location.y + halfside;
+		this->bottom = location.y - halfside;
+		this->right = location.x + halfside;
+		this->left = location.x - halfside;
 	}
 
 	void Draw()
 	{
 		if (drawState == ON)
 		{
-			double halfside = width / 2;
+			float halfside = width / 2;
 			top = location.y + halfside;
 			bottom = location.y - halfside;
 			right = location.x + halfside;
@@ -127,11 +134,11 @@ public:
 				//speed *= restitution;
 				this->speed *= 0.9f;
 				//location += speed * directionVector;
-				this->radius *= 0.9;
+				this->radius *= 0.9f;
 				color = RandomColor();
 				brk->color = RandomColor();
-				if (brk->width < 0.3) {
-					brk->width *= 1.005;
+				if (brk->width < 0.3f) {
+					brk->width *= 1.005f;
 				}
 			}
 		}
@@ -147,7 +154,7 @@ public:
 	bool CheckCollision(Circle* otherCircle) {
 		if (glm::distance(this->location, otherCircle->location) < (this->radius + otherCircle->radius)) {
 			this->directionVector = glm::normalize(this->location - otherCircle->location);
-			this->radius *= 0.99;
+			this->radius *= 0.99f;
 			this->color = RandomColor();
 			//this->speed *= Random<float>(0.5f, 1.5f);
 			//otherCircle->directionVector = -this->directionVector;
@@ -191,10 +198,8 @@ public:
 	}
 };
 
-
 list<Circle> circles;
 list<Brick> bricks;
-
 
 int main(void) {
 	srand(time(NULL));
@@ -291,9 +296,14 @@ void processInput(GLFWwindow* window)
 
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
 	{
-		glm::vec2 baseLoc = glm::vec2(0.75f, 0.75f);
-		float baseRad = 0.05f;
-		Circle cir(baseLoc, RandomDirectionVector(), baseRad, RandomColor());
-		circles.push_back(cir);
+	/*	auto now = std::chrono::steady_clock::now();
+		std::chrono::milliseconds deltaTime(100);
+		if ((now - lastKeyPressedTime[GLFW_KEY_SPACE]) > deltaTime) {*/
+			glm::vec2 baseLoc = glm::vec2(Random<float>(-1.0, 1.0), Random<float>(-1.0, 1.0));
+			float baseRad = 0.05f;
+			Circle cir(baseLoc, RandomDirectionVector(), baseRad, RandomColor());
+			circles.push_back(cir);
+		//	lastKeyPressedTime[GLFW_KEY_SPACE] = now;
+		//}
 	}
 }
