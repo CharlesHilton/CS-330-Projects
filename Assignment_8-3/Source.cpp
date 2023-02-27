@@ -45,6 +45,9 @@ glm::vec3 RandomColor(float lb = 0.1, float ub = 1.0) {
 	return glm::vec3(r, g, b);
 }
 
+glm::vec2 RandomLocation() {
+	return glm::vec2(Random<float>(-1.0f, 1.0f), Random<float>(-1.0f, 1.0f));
+}
 
 glm::vec2 RandomDirectionVector() {
 	float angle = glm::radians(Random<float>(0.0, 360.0));
@@ -142,7 +145,7 @@ public:
 				//location += speed * directionVector;
 				this->radius *= 0.9f;
 				color = RandomColor();
-				brk->color = RandomColor();
+				//brk->color = RandomColor();
 				if (brk->width < 0.3f) {
 					brk->width *= 1.005f;
 				}
@@ -229,11 +232,23 @@ int main(void) {
 	glfwSwapInterval(1);
 
 
-	bricks.push_back(Brick(REFLECTIVE, glm::vec2(0.5f, -0.33f), 0.2f, RandomColor()));
-	bricks.push_back(Brick(REFLECTIVE, glm::vec2(0.5f, -0.33f), 0.2f, RandomColor()));
-	bricks.push_back(Brick(DESTRUCTABLE, glm::vec2(-0.5f, 0.33f), 0.2f, RandomColor()));
-	bricks.push_back(Brick(DESTRUCTABLE, glm::vec2(-0.5f, -0.33f), 0.2f, RandomColor()));
-	bricks.push_back(Brick(REFLECTIVE, glm::vec2(0.0f, 0.0f), 0.2f, RandomColor()));
+	for (unsigned int i = 0; i < 10; i++) {	// Generate bricks.
+		glm::vec2 location = RandomLocation();
+		BRICKTYPE bt;
+		switch (rand() % 2)
+		{
+		case 0:
+			bt = REFLECTIVE;
+			break;
+		case 1:
+			bt = DESTRUCTABLE;
+			break;
+		default:
+			bt = REFLECTIVE;
+			break;
+		}
+		bricks.push_back(Brick(bt, RandomLocation(), Random<float>(0.1f, 0.3f), RandomColor()));
+	}
 
 	while (!glfwWindowShouldClose(window)) {
 		//Setup View
